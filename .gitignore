@@ -13,3 +13,10 @@
 # MacOSX Files
 **/.DS_Store/**/*
 **/.DS_Store
+
+# VSCode
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath

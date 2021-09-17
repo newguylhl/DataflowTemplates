@@ -59,11 +59,6 @@ public class DebeziumSourceRecordToDataflowCdcFormatTranslator {
       return null;
     }
 
-    // TODO: Consider including before value in the Row.
-    Struct afterValue = recordValue.getStruct("after");
-    Row afterValueRow = afterValue == null ? null : handleValue(afterValue.schema(), afterValue);
-    LOG.debug("Beam Row is {}", afterValueRow);
-
     Row primaryKey = null;
     boolean hasPK = true;
     if (record.key() == null) {
@@ -78,6 +73,16 @@ public class DebeziumSourceRecordToDataflowCdcFormatTranslator {
     if (operation == null) {
       return null;
     }
+
+    Struct afterValue = recordValue.getStruct("after");
+    Row afterValueRow = afterValue == null ? null : handleValue(afterValue.schema(), afterValue);
+    // Use before value as after value for DELETE operation
+    if (afterValueRow == null && operation == Operation.DELETE) {
+      Struct beforeValue = recordValue.getStruct("before");
+      Row beforeValueRow = beforeValue == null ? null : handleValue(beforeValue.schema(), beforeValue);
+      afterValueRow = beforeValueRow;
+    }
+    LOG.debug("Beam Row is {}", afterValueRow);
 
     Long timestampMs = recordValue.getInt64("ts_ms");
 

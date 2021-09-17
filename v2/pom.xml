@@ -656,4 +656,18 @@
         <module>kafka-common</module>
     </modules>
 
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <!-- Required for io.confluent:kafka-avro-serializer artifact -->
+            <id>confluent</id>
+            <url>https://packages.confluent.io/maven</url>
+        </repository>
+    </repositories>
+
 </project>
